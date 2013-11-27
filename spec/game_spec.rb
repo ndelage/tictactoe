@@ -1,8 +1,8 @@
 require 'spec_helper'
 describe Game do
   subject(:game) { Game.new(true) }
-  it { subject.board.size.should eq 9 } 
-  it { subject.board[2].should eq " " }
+  it { subject.board.size.should eq 3 } 
+  it { subject.board[2][1].should eq " " }
   its(:player) { should be_a Player }
   its(:computer) { should be_a Computer }
 
@@ -38,9 +38,9 @@ describe Game do
 
   describe '#make_move' do
     it 'marks the correct cell' do
-      game.make_move(3)
+      game.make_move(1, 1)
 
-      game.board[3].should eq "X"
+      game.board[1][1].should eq "X"
     end
   end
 
@@ -49,11 +49,11 @@ describe Game do
     context 'horizontal win' do
 
       before do
-        game.make_move(0)
-        game.make_move(9)
-        game.make_move(1)
-        game.make_move(5)
-        game.make_move(2)
+        game.make_move(0, 0)
+        game.make_move(2, 2)
+        game.make_move(0, 1)
+        game.make_move(1, 2)
+        game.make_move(0, 2)
       end
 
       it 'returns true' do
@@ -70,11 +70,11 @@ describe Game do
     context 'vertical win' do
       
       before do
-        game.make_move(0)
-        game.make_move(9)
-        game.make_move(3)
-        game.make_move(5)
-        game.make_move(6)
+        game.make_move(0, 0)
+        game.make_move(0, 2)
+        game.make_move(1, 0)
+        game.make_move(1, 1)
+        game.make_move(2, 0)
       end
 
       it 'returns true' do
@@ -90,11 +90,11 @@ describe Game do
     context 'diagonal win' do
       
       before do
-        game.make_move(0)
-        game.make_move(8)
-        game.make_move(4)
-        game.make_move(5)
-        game.make_move(9)
+        game.make_move(0, 0)
+        game.make_move(2, 1)
+        game.make_move(1, 1)
+        game.make_move(0, 1)
+        game.make_move(2, 2)
       end
 
       it 'returns true' do

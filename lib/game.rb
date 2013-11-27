@@ -1,18 +1,23 @@
-require 'player'
-require 'computer'
+require_relative 'player'
+require_relative 'computer'
 class Game
   attr_reader :board, :turn, :player, :computer, :winner
   
   def initialize(player_first)
-    @board = Array.new(9){" "}
+    @board = Array.new(3){Array.new(3){" "}}
     @player = Player.new(player_first ? "X" : "O")
     @computer = Computer.new(player_first ? "O" : "X")
     @turn = player_first ? @player : @computer
     @winner = nil
   end
 
-  def make_move(index)
-    @board[index] = @turn.mark
+  def make_move(row, column)
+    @board[row][column] = @turn.mark
+    switch_turn
+  end
+
+  def undo(row, column)
+    @board[row][column] = " "
     switch_turn
   end
 
@@ -28,44 +33,71 @@ class Game
   end
 
   def horizontal_win?
-    @board.each_slice(3) do |row|
-      return @winner = @player if all_same?(row, @player.mark)
-      return @winner = @computer if all_same?(row, @computer.mark)
+    @board.each do |row|
+      return @winner = @player if row.all?{|cell| cell == @player.mark}
+      return @winner = @computer if row.all?{|cell| cell == @computer.mark}
     end
     false
   end
 
   def vertical_win?
-    @board.each_slice(3).to_a.transpose.each do |column|
-      return @winner = @player if all_same?(column, @player.mark)
-      return @winner = @computer if all_same?(column, @computer.mark)
+    columns.each do |column|
+      return @winner = @player if column.all?{|cell| cell == @player.mark}
+      return @winner = @computer if column.all?{|cell| cell == @computer.mark}
     end
     false
   end
 
   def diagonal_win?
-    two_dimensional = @board.each_slice(3).to_a
-
-    (0..2).each do |i|
-      diagonal_first << two_dimensional[i][i]
-      (2..0).each do |n|
-        diagonal_second << two_dimensional[i][n]
-      end
+    diagonals.each do |diagonal|
+      return @winner = @player if diagonal.all?{|cell| cell == @player.mark } 
+      return @winner = @computer if diagonal.all?{|cell| cell == @computer.mark } 
     end
-
-    return @winner = @player if all_same?(diagonal_first, @player.mark)
-    return @winner = @player if all_same?(diagonal_second, @player.mark)
-    return @winner = @computer if all_same?(diagonal_first, @computer.mark)
-    return @winner = @computer if all_same?(diagonal_second, @computer.mark)
     false
   end
 
-  def draw?
-    !@board.find{|el| el == " "}
+  def diagonals
+    diagonals = []
+    diagonals << (0..2).map do |i|
+      @board[i][i]
+    end
+
+    nums = (0..2).to_a
+    diagonals << @board.map do |row|
+      row[nums.pop]
+    end
+    diagonals
   end
+
+  def columns
+    @board.transpose
+  end
+
+  def draw?
+    !@board.flatten.any?{|el| el == " "}
+  end
+
 
   def all_same?(ary, mark)
     ary.uniq.size == ary.size && ary.first == mark
   end
 
 end
+
+game = Game.new(true)
+
+until game.game_over?
+  if game.turn.is_a?(Computer)
+    move = game.computer.move(game)
+    game.make_move(move[:row], move[:column])
+  else
+    print "Your turn:"
+    move = gets.chomp
+    game.make_move(move[0].to_i, move[1].to_i)
+  end
+  system("clear")
+  game.board.each { |row| p row}
+end
+
+p game.winner ? game.winner : "Draw"
+
