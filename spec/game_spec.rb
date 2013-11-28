@@ -2,7 +2,7 @@ require 'spec_helper'
 describe Game do
   subject(:game) { Game.new(true) }
   it { subject.board.size.should eq 3 } 
-  it { subject.board[2][1].should eq " " }
+  it { subject.board[2][1].content.should eq " " }
   its(:player) { should be_a Player }
   its(:computer) { should be_a Computer }
 

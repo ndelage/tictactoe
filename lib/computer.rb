@@ -1,60 +1,77 @@
 class Computer < Player
-
   def move(game)
-    get_best_move(game.dup)
-  end
-
-  def get_best_move(game)
-    ranked_moves = rank_possible_moves(game)
-    move = ranked_moves.max_by {|cell, score| score}
-    move.first
+    @game = game.dup
+    # move_to_win if can_win?(self)
+    # block if can_win?(game.player)
+    # fork if can_fork?(self)
+    # block_fork if can_fork?(game.player)
+    # play_center if center_open?
+    # play_opposite_corner if opponent_has_corner_and_opposite_open?
+    # play_random_corner if open_corner?
+    play_random
   end
 
   private
 
-  def rank_possible_moves(game)
-    possible_moves = open_cells(game)
-    possible_moves.each_key do |indices|
-      possible_moves[indices] = get_move_score(game, indices)
-    end
+  def play_random
+    valid_moves.sample
   end
 
-  def get_move_score(game,indices)
-    game.make_move(indices[:row], indices[:column])
-    best_score = apply_minimax(game, depth=0)
-    game.undo(indices[:row], indices[:column])
-    best_score
+  def play_random_corner
+    @game.board.open_corners.sample
+  end 
+
+  def open_corner?
+    @game.board.open_corners.any?
   end
 
-  def apply_minimax(game, depth)
-    return get_score(game) if game.game_over?
-    game.turn.is_a?(Player) ? minimax(game, depth).min : minimax(game, depth).max
+  def play_center
+    Indices.new(1,1)
   end
 
-  def minimax(game, depth, best_score=[])
-    open_cells(game).each_key do |indices|
-      game.make_move(indices[:row], indices[:column])
-      score = (apply_minimax(game, depth += 1) / depth.to_f)
-      game.undo(indices[:row], indices[:column])
-      best_score.push(score)
-    end
-    best_score
+  def center_open?
+    @game.board[1][1].empty?
   end
 
-  def get_score(game)
-    return 1 if game.winner.is_a?(Computer)
-    return -1 if game.winner.is_a?(Player)
-    0
+  def fork
+    @fork_move
   end
 
-  def open_cells(game)
-    open_cells = {}
-    game.board.each_with_index do |row, row_index|
-      row.each_with_index do |cell, column_index|
-        open_cells[{row: row_index, column:column_index}] = nil if cell == " "
+  def block_fork
+    @fork_move
+  end
+
+  def can_fork?(player)
+    dup_game = @game.dup
+    valid_moves.each do |index|
+      winning_combinations = 0
+      dup_game.make_move(index.row, index.column, player.mark).board.open_indices.each do |indexx|
+        winning_combinations += 1 if dup_game.make_move(indexx.row, indexx.column, player.mark).game_over?
       end
+      @fork_move = index if winning_combinations >= 2
     end
-    open_cells
+    @fork_move
   end
 
+
+  def block
+    @winning_move
+  end
+
+  def move_to_win
+    @winning_move
+  end
+
+  def can_win?(player)
+    valid_moves.each do |index|
+      game = @game.dup
+      game.make_move(index.row, index.column, player.mark)
+      @winning_move = index if game.game_over?
+    end
+    @winning_move
+  end
+
+  def valid_moves
+    @game.board.open_indices
+  end
 end
