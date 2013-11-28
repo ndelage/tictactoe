@@ -2,13 +2,13 @@ require_relative 'board'
 require_relative 'player'
 require_relative 'computer'
 class Game
-  attr_reader :board, :turn, :player, :computer, :winner
+  attr_reader :turn, :player, :computer, :winner
+  attr_accessor :board
   
-  def initialize(player_first)
+  def initialize(player)
     @board = Board.new
-    @player = Player.new(player_first ? "X" : "O")
-    @computer = Computer.new(player_first ? "O" : "X")
-    @turn = player_first ? @player : @computer
+    @player = player
+    @computer = Computer.new (["X", "O"] - [@player.mark]).join
     @winner = nil
   end
 
@@ -19,62 +19,39 @@ class Game
     end
   end
 
-  def play
-    until game_over?
-      print_board
-      print "where to?:"
-      input = gets.chomp
-      make_move(input[0].to_i,input[1].to_i)
-      sleep(0.5)
-      computer_move = @computer.move(self)
-      make_move(computer_move.row, computer_move.column)
-      sleep(0.5)
-    end
-    puts @winner
-  end
-
-  def make_move(row, column, mark=@turn.mark)
+  def make_move(row, column, mark)
     @board[row][column].mark(mark)
-    switch_turn
   end
 
   def game_over?
-    return true if horizontal_win? || vertical_win? || diagonal_win? 
-    false
+    horizontal_win? || vertical_win? || diagonal_win? 
   end
 
   private
 
-  def switch_turn
-    @turn = @turn == @computer ? @player : @computer
-  end
-
   def horizontal_win?
-    @board.each do |row|
-      return @winner = @player if row.all?{|cell| cell.marked_with?(@player.mark)}
-      return @winner = @computer if row.all?{|cell| cell.marked_with?(@computer.mark)}
-    end
-    false
+    check_win(@board)
   end
 
   def vertical_win?
-    @board.columns.each do |column|
-      return @winner = @player if column.all?{|cell| cell.marked_with?(@player.mark)}
-      return @winner = @computer if column.all?{|cell| cell.marked_with?(@computer.mark)}
-    end
-    false
+    check_win(@board.columns)
   end
 
   def diagonal_win?
-    @board.diagonals.each do |diagonal|
-      return @winner = @player if diagonal.all?{|cell| cell == @player.mark } 
-      return @winner = @computer if diagonal.all?{|cell| cell == @computer.mark } 
+    check_win(@board.diagonals)
+  end
+
+  def check_win(ary)
+    ary.each do |subary|
+      [@player, @computer].each do |player|
+        @winner = player if subary.all?{|cell| cell.marked_with? player.mark } 
+      end
     end
-    false
+    return @winner
   end
 
   def draw?
-    return @winner = :draw if @board.flatten.all?{|cell| cell.marked?}
+    @winner = :draw if @board.flatten.all?{|cell| cell.marked?}
   end
 
 
@@ -84,4 +61,28 @@ class Game
 
 end
 
-Game.new(true).play
+game = Game.new(Player.new("X"))
+turn = game.player
+
+until winner = game.game_over?
+  game.print_board
+  if turn == game.player
+    print "SHOOT:"
+    input = gets.chomp
+    game.make_move(input[0].to_i, input[1].to_i, game.player.mark)
+    turn = game.computer
+  else
+    move = game.computer.best_move(game)
+    game.make_move(move.row, move.column, game.computer.mark)
+    turn = game.player
+    sleep(1)
+  end
+end
+ puts winner
+
+
+
+
+
+
+

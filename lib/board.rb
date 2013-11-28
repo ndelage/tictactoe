@@ -4,8 +4,8 @@ Indices = Struct.new(:row, :column)
 
 class Board < Array
   CORNERS = [Indices.new(0,0), Indices.new(0,2), Indices.new(2,0), Indices.new(2,2)]
-  def initialize
-    super(Array.new(3){Array.new(3){Cell.new}})
+  def initialize(ary=Array.new(3){Array.new(3){Cell.new}})
+    super(ary)
   end
 
   def open_indices

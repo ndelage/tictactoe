@@ -6,7 +6,7 @@ class Cell
   end
 
   def marked_with?(char)
-    @contet == char
+    @content == char
   end
 
   def mark(char)
