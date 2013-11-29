@@ -1,4 +1,5 @@
 class Computer < Player
+
   def best_move(game)
     @game = game.dup
     return move_to_win if can_win?(self)
@@ -15,6 +16,7 @@ class Computer < Player
   private
 
   def force_win_block(player)
+    puts "Forcing a block"
     @block_move = nil
     valid_moves.each do |index|
       dup_game = deep_copy(@game)
@@ -39,17 +41,7 @@ class Computer < Player
   end
 
   def play_opposite_corner
-    @opposite
-  end
-
-  def has_corner_and_opposite_open?(player)
-    @opposite = nil
-    Board::CORNERS.each_with_index do |index, corner_index|
-      cell = @game.board[index.row][index.column]
-      indexxxx = Board::CORNERS[corner_index - 2]
-      opposite = @game.board[indexxxx.row][indexxxx.column]
-      @opposite = indexxxx if cell.marked_with?(player.mark) && opposite.empty?
-    end
+    puts "Playing opposite corner"
     @opposite
   end
 
@@ -78,12 +70,24 @@ class Computer < Player
 
   def fork
     puts "Playing fork"
-    @fork_move
+    @fork_moves.first
   end
 
   def block_fork
     puts "Blocking fork"
-    @fork_move
+    @fork_moves.first
+  end
+
+
+  def has_corner_and_opposite_open?(player)
+    @opposite = nil
+    @game.board.corners.each_with_index do |index, corner_index|
+      cell = @game.board[index.row][index.column]
+      indexxxx = @game.board.corners[corner_index - 2]
+      opposite = @game.board[indexxxx.row][indexxxx.column]
+      @opposite = indexxxx if cell.marked_with?(player.mark) && opposite.empty?
+    end
+    @opposite
   end
 
   def fork_moves(player)
@@ -110,7 +114,6 @@ class Computer < Player
 
   def move_to_win
     puts "Playing win"
-    puts @winning_move
     @winning_move
   end
 
