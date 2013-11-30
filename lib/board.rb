@@ -30,13 +30,14 @@ class Board < Array
 
 
   def diagonals
-    diagonals = []
+      diagonals = []
     diagonals << (0..2).map do |i|
       self[i][i]
     end
 
-    diagonals << (0..2).map do |i|
-      self.transpose[i][i]
+    nums = (0..2).to_a
+    diagonals << self.map do |row|
+      row[nums.pop]
     end
     diagonals
   end

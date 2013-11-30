@@ -14,8 +14,8 @@ class Computer < Player
 
   def best_move(game)
     moves = rank_moves(game)
-    max = moves.values.max
-    moves.select{|k,v| v == max}.first.first
+    min = moves.values.map{|n| n.abs}.min
+    moves.select{|k,v| v.abs == min}.first.first
   end
 
   def rank_moves(game)
@@ -26,6 +26,13 @@ class Computer < Player
     moves
   end
 
+  def score(game)
+    return -1 if game.game_over? == self
+    return 1 if game.game_over? == game.player
+    return 0 if game.game_over? == :draw
+    return rank_moves(deep_copy(game))
+  end
+
   def average(hash)
     return hash if hash.is_a?(Fixnum)
     ranks = []
@@ -33,13 +40,6 @@ class Computer < Player
       ranks << rank
     end
     ranks.inject(:+)/ranks.size.to_f
-  end
-
-  def score(game)
-    return 1 if game.game_over? == self
-    return -1 if game.game_over? == game.player
-    return 0 if game.game_over? == :draw
-    return rank_moves(deep_copy(game))
   end
 
   # def best_move(game)

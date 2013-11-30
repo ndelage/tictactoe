@@ -24,7 +24,6 @@ class GamePresenter
       else
         move = @game.computer.best_move(@game)
         @game.make_move(move.row, move.column)
-        sleep(1)
       end
     end
     puts winner
