@@ -1,22 +1,9 @@
-class Hash
-  def flat_each(&blk)
-    each do |k,v|
-      if v.is_a?(Hash)
-        v.flat_each(&blk)
-      else
-        yield v
-      end
-    end
-  end
-end
-
 class Computer < Player
 
   def best_move(game)
     moves = rank_moves(game)
-    p moves
-    max = moves.values.map{|n| n.abs}.max
-    moves.select{|k,v| v.abs == max}.first.first
+    min = moves.values.min
+    moves.select{|k,v| v == min}.first.first
   end
 
   def rank_moves(game)
@@ -31,15 +18,12 @@ class Computer < Player
     return -1 if game.game_over? == self
     return 1 if game.game_over? == game.player
     return 0 if game.game_over? == :draw
-    scores = []
     try_each_valid_move(game) do |game, index|
-      scores << score(game)
+      score(game)
     end
-    return scores
   end
 
   def average(scores)
-    p scores
     return scores if scores.is_a?(Fixnum)
     scores = scores.flatten
     scores.inject(:+)/scores.size.to_f
@@ -47,7 +31,7 @@ class Computer < Player
 
 
   def try_each_valid_move(game=@game)
-    game.valid_moves.each do |index|
+    game.valid_moves.map do |index|
       game_copy = deep_copy(game)
       game_copy.make_move(index.row, index.column)
       yield(game_copy, index)
