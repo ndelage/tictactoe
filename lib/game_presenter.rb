@@ -38,4 +38,6 @@ class GamePresenter
 end
 
 game = GamePresenter.new(GameInteractor.new(Player.new("X")))
-game.mainloop
+game.game.make_move(0,0)
+game.game.make_move(0,1)
+game.game.computer.best_move(game.game)

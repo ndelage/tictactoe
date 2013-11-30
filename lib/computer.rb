@@ -23,23 +23,28 @@ class Computer < Player
     try_each_valid_move(game) do |game, index|
       moves[index] = average(score(game))
     end
-    moves
+    p moves
   end
 
   def score(game)
     return -1 if game.game_over? == self
     return 1 if game.game_over? == game.player
     return 0 if game.game_over? == :draw
-    return rank_moves(deep_copy(game))
+    scores = []
+    try_each_valid_move(game) do |game, index|
+      scores << score(game)
+    end
+    return scores
   end
 
-  def average(hash)
-    return hash if hash.is_a?(Fixnum)
-    ranks = []
-    hash.flat_each do |rank|
-      ranks << rank
-    end
-    ranks.inject(:+)/ranks.size.to_f
+  def average(scores)
+    scores.flatten.inject(:+)/scores.flatten.size.to_f
+    # return hash if hash.is_a?(Fixnum)
+    # ranks = []
+    # hash.flat_each do |rank|
+    #   ranks << rank
+    # end
+    # ranks.inject(:+)/ranks.size.to_f
   end
 
   # def best_move(game)
