@@ -1,4 +1,15 @@
 require_relative 'game_interactor'
+
+PRINT_BOARD = <<-STRING.chomp                                    
+                                                   TIC TAC TOE
+
+                                                    * | * | * 
+                                                   ---|---|---
+                                                    * | * | * 
+                                                   ---|---|---
+                                                    * | * | * 
+STRING
+
 class GamePresenter
 
   def initialize(game)
@@ -7,14 +18,16 @@ class GamePresenter
 
   def print_board
     system('clear')
-    @game.board.each do |row|
-      p row
+    play_board = PRINT_BOARD.dup
+    @game.board.flatten.each do |cell|
+      play_board.sub!('*', cell.content)
     end
+    puts play_board
   end
 
 
   def mainloop
-    turn = @game.player
+    turn = @game.player.mark == "X" ? @game.player : @game.computer
 
     until winner = @game.game_over?
       print_board
@@ -41,5 +54,5 @@ class GamePresenter
 
 end
 
-game = GamePresenter.new(GameInteractor.new(Player.new("X")))
+game = GamePresenter.new(GameInteractor.new(Player.new("O")))
 game.mainloop

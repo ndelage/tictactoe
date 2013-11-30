@@ -16,10 +16,23 @@ class GameInteractor
 
   def make_move(row, column, mark)
     @board[row][column].mark(mark)
+    self
   end
 
   def game_over?
     horizontal_win? || vertical_win? || diagonal_win? 
+  end
+
+  def valid_moves
+    board.open_indices
+  end
+
+  def open_corners
+    board.open_corners
+  end
+
+  def corners
+    board.corners
   end
 
   private
