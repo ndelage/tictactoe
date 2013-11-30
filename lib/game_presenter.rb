@@ -1,5 +1,6 @@
 require_relative 'game_interactor'
 class GamePresenter
+  attr_reader :game
 
   def initialize(game)
     @game = game
@@ -14,19 +15,15 @@ class GamePresenter
 
 
   def mainloop
-    turn = @game.player
-
     until winner = @game.game_over?
       print_board
-      if turn == @game.player
+      if game.turn == @game.player
         print "SHOOT:"
         input = clean_input(gets.chomp)
-        @game.make_move(input.row, input.column, @game.player.mark)
-        turn = @game.computer
+        @game.make_move(input.row, input.column)
       else
         move = @game.computer.best_move(@game)
-        @game.make_move(move.row, move.column, @game.computer.mark)
-        turn = @game.player
+        @game.make_move(move.row, move.column)
         sleep(1)
       end
     end

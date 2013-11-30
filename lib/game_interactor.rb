@@ -11,15 +11,25 @@ class GameInteractor
     @player = player
     @computer = Computer.new (["X", "O"] - [@player.mark]).join
     @winner = nil
+    @turn = @player.mark == "X" ? @player : @computer
+  end
+
+  def switch_turn
+    @turn = @turn == player ? computer : player
   end
 
 
-  def make_move(row, column, mark)
-    @board[row][column].mark(mark)
+  def make_move(row, column)
+    @board[row][column].mark(@turn.mark)
+    switch_turn
+  end
+
+  def valid_moves
+    @board.open_indices
   end
 
   def game_over?
-    horizontal_win? || vertical_win? || diagonal_win? 
+    horizontal_win? || vertical_win? || diagonal_win? || draw?
   end
 
   private
