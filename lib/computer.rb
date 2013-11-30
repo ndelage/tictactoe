@@ -14,7 +14,6 @@ class Computer < Player
 
   def best_move(game)
     moves = rank_moves(game)
-    p moves
     min = moves.values.map{|n| n.abs}.min
     moves.select{|k,v| v.abs == min}.first.first
   end
