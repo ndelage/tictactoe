@@ -15,8 +15,8 @@ class Computer < Player
   def best_move(game)
     moves = rank_moves(game)
     p moves
-    min = moves.values.map{|n| n.abs}.min
-    moves.select{|k,v| v.abs == min}.first.first
+    max = moves.values.map{|n| n.abs}.max
+    moves.select{|k,v| v.abs == max}.first.first
   end
 
   def rank_moves(game)
@@ -39,7 +39,10 @@ class Computer < Player
   end
 
   def average(scores)
-    scores.flatten.inject(:+)/scores.flatten.size.to_f
+    p scores
+    return scores if scores.is_a?(Fixnum)
+    scores = scores.flatten
+    scores.inject(:+)/scores.size.to_f
   end
 
 
