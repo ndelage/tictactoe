@@ -1,4 +1,5 @@
 require_relative 'game_interactor'
+require 'pry'
 class GamePresenter
   attr_reader :game
 

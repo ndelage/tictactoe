@@ -24,6 +24,11 @@ class GameInteractor
     switch_turn
   end
 
+  def undo_move(row,column)
+    @board[row][column].empty!
+    switch_turn
+  end
+
   def valid_moves
     @board.open_indices
   end

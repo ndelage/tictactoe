@@ -21,6 +21,10 @@ class Cell
     @content == " "
   end
 
+  def empty!
+    @content = " "
+  end
+
   def to_s
     @content
   end
