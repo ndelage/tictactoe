@@ -52,6 +52,7 @@ class GameInteractor
   end
 
   def check_win(ary)
+    @winner = nil
     ary.each do |subary|
       [@player, @computer].each do |player|
         @winner = player if subary.all?{|cell| cell.marked_with? player.mark } 
