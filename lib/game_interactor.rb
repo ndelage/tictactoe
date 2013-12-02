@@ -3,7 +3,7 @@ require_relative 'player'
 require_relative 'computer'
 
 class GameInteractor
-  attr_reader :turn, :player, :computer, :winner
+  attr_reader :turn, :player1, :player2, :winner, :players
   attr_accessor :board
   DEFAULTS = {board: Board.new}
   

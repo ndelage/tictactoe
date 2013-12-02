@@ -20,7 +20,7 @@ class Computer < Player
 
   def get_score(game)
     return 1 if game.winner == self
-    return -1 if game.winner == game.player
+    return -1 if game.winner == (game.players - [self]).first
     return 0
   end
 
