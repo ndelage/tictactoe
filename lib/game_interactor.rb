@@ -10,14 +10,14 @@ class GameInteractor
   def initialize(opts)
     opts = DEFAULTS.merge(opts)
     @board = opts.fetch(:board)
-    @player = opts.fetch(:player)
-    @computer = opts.fetch(:computer, Computer.new((["X", "O"] - [@player.mark]).join))
-    @turn = opts.fetch(:turn, @player.mark == "X" ? @player : @computer)
+    @player1 = opts.fetch(:player1)
+    @player2 = opts.fetch(:player2)
+    @players = [@player1, @player2]
     @winner = nil
   end
 
   def make_move(row, column)
-    @board[row][column].mark(@turn.mark)
+    @board[row][column].mark(turn.mark)
     switch_turn
   end
 
@@ -34,6 +34,10 @@ class GameInteractor
     true if win? || draw?
   end
 
+  def turn
+    @players.first
+  end
+
   private
 
   def draw?
@@ -47,7 +51,7 @@ class GameInteractor
   def check_winner(ary)
     winner = nil
     ary.each do |subary|
-      [@player, @computer].each do |player|
+      @players.each do |player|
         winner = player if subary.all?{|cell| cell.marked_with? player.mark } 
       end
     end
@@ -55,7 +59,7 @@ class GameInteractor
   end
   
   def switch_turn
-    @turn = @turn == player ? computer : player
+    @players.rotate!
   end
   
 end

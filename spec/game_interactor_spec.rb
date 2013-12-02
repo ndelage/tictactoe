@@ -1,8 +1,9 @@
 require 'spec_helper'
 describe GameInteractor do
   let(:player) { Player.new("X") }
-  subject(:game) { GameInteractor.new(player: player) }
-  its(:computer) { should be_a Computer }
+  let(:computer) { Computer.new("O") }
+  subject(:game) { GameInteractor.new(player1: player, 
+                                      player2: computer) }
 
 
   describe '#make_move' do
