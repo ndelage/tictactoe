@@ -14,11 +14,6 @@ class GameInteractor
     @turn = @player.mark == "X" ? @player : @computer
   end
 
-  def switch_turn
-    @turn = @turn == player ? computer : player
-  end
-
-
   def make_move(row, column)
     @board[row][column].mark(@turn.mark)
     switch_turn
@@ -29,40 +24,48 @@ class GameInteractor
     switch_turn
   end
 
+  def switch_turn
+    @turn = @turn == player ? computer : player
+  end
+
   def valid_moves
     @board.open_indices
   end
 
-  def game_over?
-    horizontal_win? || vertical_win? || diagonal_win? || draw?
+  def over?
+    @winner = win? || draw?
   end
 
   private
 
-  def horizontal_win?
-    check_win(@board)
-  end
-
-  def vertical_win?
-    check_win(@board.columns)
-  end
-
-  def diagonal_win?
-    check_win(@board.diagonals)
-  end
-
-  def check_win(ary)
-    @winner = nil
-    ary.each do |subary|
-      [@player, @computer].each do |player|
-        @winner = player if subary.all?{|cell| cell.marked_with? player.mark } 
-      end
-    end
-    return @winner
+  def win?
+    check_win(@board) || check_win(@board.columns) || check_win(@board.diagonals)
   end
 
   def draw?
-    @winner = :draw if @board.flatten.all?{|cell| cell.marked?}
+    return false if win?
+    try_each_valid_move do
+      return draw?
+    end
+    :draw
+  end
+
+  def check_win(ary)
+    winner = nil
+    ary.each do |subary|
+      [@player, @computer].each do |player|
+        winner = player if subary.all?{|cell| cell.marked_with? player.mark } 
+      end
+    end
+    return winner
+  end
+
+  def try_each_valid_move
+    valid_moves.each do |index|
+      make_move(index.row, index.column)
+      yield(self,index)
+      undo_move(index.row, index.column)
+    end
   end
 
 end

@@ -10,7 +10,7 @@ class Computer < Player
   end
 
   def negamax(game, color)
-    return color * get_score(game) if game.game_over?
+    return color * get_score(game) if game.over?
     best_score = -Float::INFINITY
     try_each_valid_move(game) do |game|
       best_score = [best_score, -negamax(game, -color)].max

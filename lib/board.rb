@@ -18,19 +18,8 @@ class Board < Array
     indices
   end
 
-  def open_corners
-    corners.select do |index|
-      self[index.row][index.column].empty?
-    end
-  end
-
-  def corners
-    [Indices.new(0,0), Indices.new(0,2), Indices.new(2,0), Indices.new(2,2)]
-  end
-
-
   def diagonals
-      diagonals = []
+    diagonals = []
     diagonals << (0..2).map do |i|
       self[i][i]
     end

@@ -16,7 +16,7 @@ class GamePresenter
 
 
   def mainloop
-    until winner = @game.game_over?
+    until @game.over?
       print_board
       if game.turn == @game.player
         print "SHOOT:"
@@ -27,7 +27,7 @@ class GamePresenter
         @game.make_move(move.row, move.column)
       end
     end
-    puts winner
+    p @game.winner
   end
 
   private

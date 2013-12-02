@@ -16,7 +16,7 @@ describe Game do
     end
   end
 
-  describe '#game_over?' do
+  describe '#over??' do
 
     context 'horizontal win' do
 
@@ -27,11 +27,11 @@ describe Game do
       end
 
       it 'is truthy' do
-        game.game_over?.should_not eq nil
+        game.over??.should_not eq nil
       end
 
       it 'sets the winner' do
-        game.game_over?
+        game.over??
         game.winner.should be_a Player
 
       end
@@ -46,11 +46,11 @@ describe Game do
       end
 
       it 'is truthy' do
-        game.game_over?.should_not eq nil
+        game.over?.should_not eq nil
       end
 
       it 'sets the winner' do
-        game.game_over?
+        game.over?
         game.winner.should be_a Player
       end
     end
@@ -64,11 +64,11 @@ describe Game do
       end
 
       it 'is truthy' do
-        game.game_over?.should_not eq nil
+        game.over?.should_not eq nil
       end
 
       it 'sets the winner' do
-        game.game_over?
+        game.over?
         game.winner.should be_a Player
       end
     end
