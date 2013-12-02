@@ -18,6 +18,10 @@ class Board < Array
     indices
   end
 
+  def full?
+    flatten.none? { |cell| cell.empty? }
+  end
+
   def diagonals
     diagonals = []
     diagonals << (0..2).map do |i|
@@ -33,5 +37,10 @@ class Board < Array
 
   def columns
     transpose
+  end
+
+  # For testing purposes
+  def self.from_char_ary(ary)
+    new(ary.flatten.map{|char| Cell.new(char)}.each_slice(3).to_a)
   end
 end

@@ -38,5 +38,6 @@ class GamePresenter
 
 end
 
-game = GamePresenter.new(GameInteractor.new(Player.new("X")))
+player = Player.new("O")
+game = GamePresenter.new(GameInteractor.new(player: player))
 game.mainloop

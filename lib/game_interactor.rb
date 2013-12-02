@@ -5,13 +5,15 @@ require_relative 'computer'
 class GameInteractor
   attr_reader :turn, :player, :computer, :winner
   attr_accessor :board
+  DEFAULTS = {board: Board.new}
   
-  def initialize(player)
-    @board = Board.new
-    @player = player
-    @computer = Computer.new (["X", "O"] - [@player.mark]).join
+  def initialize(opts)
+    opts = DEFAULTS.merge(opts)
+    @board = opts.fetch(:board)
+    @player = opts.fetch(:player)
+    @computer = opts.fetch(:computer, Computer.new((["X", "O"] - [@player.mark]).join))
+    @turn = opts.fetch(:turn, @player.mark == "X" ? @player : @computer)
     @winner = nil
-    @turn = @player.mark == "X" ? @player : @computer
   end
 
   def make_move(row, column)
@@ -24,33 +26,25 @@ class GameInteractor
     switch_turn
   end
 
-  def switch_turn
-    @turn = @turn == player ? computer : player
-  end
-
   def valid_moves
     @board.open_indices
   end
 
   def over?
-    @winner = win? || draw?
+    true if win? || draw?
   end
 
   private
 
-  def win?
-    check_win(@board) || check_win(@board.columns) || check_win(@board.diagonals)
-  end
-
   def draw?
-    return false if win?
-    try_each_valid_move do
-      return draw?
-    end
-    :draw
+    @board.full? && !winner
   end
-
-  def check_win(ary)
+  
+  def win?
+    @winner = check_winner(@board) || check_winner(@board.columns) || check_winner(@board.diagonals)
+  end
+  
+  def check_winner(ary)
     winner = nil
     ary.each do |subary|
       [@player, @computer].each do |player|
@@ -59,13 +53,9 @@ class GameInteractor
     end
     return winner
   end
-
-  def try_each_valid_move
-    valid_moves.each do |index|
-      make_move(index.row, index.column)
-      yield(self,index)
-      undo_move(index.row, index.column)
-    end
+  
+  def switch_turn
+    @turn = @turn == player ? computer : player
   end
-
+  
 end

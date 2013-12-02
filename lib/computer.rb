@@ -1,7 +1,7 @@
 class Computer < Player
   def best_move(game)
     best_score = -Float::INFINITY
-    best_index = nil
+    best_index = game.valid_moves.sample
     try_each_valid_move(game) do |game, index|
       score = -negamax(game, -1)
       best_score, best_index = score, index if score > best_score

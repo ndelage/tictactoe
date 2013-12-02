@@ -1,8 +1,8 @@
 class Cell
   attr_reader :content
   
-  def initialize
-    @content = " "
+  def initialize(content=" ")
+    @content = content
   end
 
   def marked_with?(char)
