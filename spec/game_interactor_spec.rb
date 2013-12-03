@@ -1,9 +1,9 @@
 require 'spec_helper'
 describe GameInteractor do
-  let(:player) { Player.new("X") }
-  let(:computer) { Computer.new("O") }
-  subject(:game) { GameInteractor.new(player1: player, 
-                                      player2: computer) }
+  let(:player1) { AbstractPlayer.new("X") }
+  let(:player2) { AbstractPlayer.new("O") }
+  subject(:game) { GameInteractor.new(player1: player1, 
+                                      player2: player2) }
 
 
   describe '#make_move' do
@@ -15,7 +15,7 @@ describe GameInteractor do
 
     it 'switches the turn' do
       game.make_move(1, 1)
-      game.turn.should be_a Computer
+      game.turn.should eq player2
     end
   end
 
@@ -39,14 +39,14 @@ describe GameInteractor do
 
       it 'sets the winner' do
         game.over?
-        game.winner.should be_a Player
+        game.winner.should eq player1
       end
     end
 
     context 'vertical win' do
       let(:board) { Board.from_char_ary([["O", " ", " "],
-        ["O", " ", " "],
-        ["O", " ", " "]]) }
+                                         ["O", " ", " "],
+                                         ["O", " ", " "]]) }
       before{ game.board = board }
 
       it 'is truthy' do
@@ -55,14 +55,14 @@ describe GameInteractor do
 
       it 'sets the winner' do
         game.over?
-        game.winner.should be_a Computer
+        game.winner.should eq player2
       end
     end
 
     context 'diagonal win' do
       let(:board) { Board.from_char_ary([["X", " ", " "],
-                                    ["O", "X", " "],
-                                    ["O", " ", "X"]]) }
+                                         ["O", "X", " "],
+                                        ["O", " ", "X"]]) }
       before{ game.board = board }
 
       it 'is truthy' do
@@ -71,7 +71,7 @@ describe GameInteractor do
 
       it 'sets the winner' do
         game.over?
-        game.winner.should be_a Player
+        game.winner.should eq player1
       end
     end
 

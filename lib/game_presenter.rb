@@ -1,5 +1,5 @@
-require_relative 'game_interactor'
-require 'pry'
+require_relative 'console_player'
+require_relative 'game/game_interactor'
 class GamePresenter
   attr_reader :game
 
@@ -18,14 +18,8 @@ class GamePresenter
   def mainloop
     until @game.over?
       print_board
-      if game.turn == @game.player
-        print "SHOOT:"
-        input = clean_input(gets.chomp)
-        @game.make_move(input.row, input.column)
-      else
-        move = @game.computer.best_move(@game)
-        @game.make_move(move.row, move.column)
-      end
+      move = @game.turn.get_move(@game)
+      @game.make_move(move.row, move.column)
     end
     p @game.winner
   end
@@ -38,6 +32,8 @@ class GamePresenter
 
 end
 
-player = Player.new("O")
-game = GamePresenter.new(GameInteractor.new(player: player))
+player = ConsolePlayer.new("O")
+computer = ComputerPlayer.new(7, "X")
+game = GamePresenter.new(GameInteractor.new(player1: player,
+                                            player2: computer))
 game.mainloop

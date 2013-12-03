@@ -1,33 +1,33 @@
 require_relative 'board'
-require_relative 'player'
-require_relative 'computer'
+require_relative 'abstract_player'
+require_relative 'computer_player'
 
 class GameInteractor
-  attr_reader :turn, :player1, :player2, :winner, :players
+  attr_reader :player1, :player2, :winner, :players
   attr_accessor :board
   DEFAULTS = {board: Board.new}
   
   def initialize(opts)
     opts = DEFAULTS.merge(opts)
-    @board = opts.fetch(:board)
+    @board   = opts.fetch(:board)
     @player1 = opts.fetch(:player1)
     @player2 = opts.fetch(:player2)
     @players = [@player1, @player2]
-    @winner = nil
+    @winner  = nil
   end
 
   def make_move(row, column)
-    @board[row][column].mark(turn.mark)
+    board[row][column].mark(turn.mark)
     switch_turn
   end
 
   def undo_move(row,column)
-    @board[row][column].empty!
+    board[row][column].empty!
     switch_turn
   end
 
   def valid_moves
-    @board.open_indices
+    board.open_indices
   end
 
   def over?
@@ -35,23 +35,23 @@ class GameInteractor
   end
 
   def turn
-    @players.first
+    players.first
   end
 
   private
 
   def draw?
-    @board.full? && !winner
+    board.full? && !winner
   end
   
   def win?
-    @winner = check_winner(@board) || check_winner(@board.columns) || check_winner(@board.diagonals)
+    @winner = check_winner(board) || check_winner(board.columns) || check_winner(board.diagonals)
   end
   
   def check_winner(ary)
     winner = nil
     ary.each do |subary|
-      @players.each do |player|
+      players.each do |player|
         winner = player if subary.all?{|cell| cell.marked_with? player.mark } 
       end
     end
@@ -59,7 +59,7 @@ class GameInteractor
   end
   
   def switch_turn
-    @players.rotate!
+    players.rotate!
   end
   
 end

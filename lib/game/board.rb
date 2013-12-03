@@ -9,13 +9,13 @@ class Board < Array
   end
 
   def open_indices
-    indices = []
-    self.each_with_index do |row, row_index|
-      row.each_with_index do |cell, col_index|
-        indices.push(Indices.new(row_index, col_index)) if cell.empty?
+    self.map.with_index do |row, row_index|
+      row.map.with_index do |cell, col_index|
+        Indices.new(row_index, col_index) if cell.empty?
       end
     end
-    indices
+    .flatten
+    .compact
   end
 
   def full?
@@ -36,7 +36,7 @@ class Board < Array
   end
 
   def columns
-    transpose
+    self.transpose
   end
 
   # For testing purposes
