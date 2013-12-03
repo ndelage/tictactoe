@@ -1,7 +1,8 @@
 class Cell
   attr_reader :content
+  EMPTY_VALUE = " "
   
-  def initialize(content=" ")
+  def initialize(content=EMPTY_VALUE)
     @content = content
   end
 
@@ -14,15 +15,15 @@ class Cell
   end
 
   def marked?
-    @content != " "
+    !empty?
   end
 
   def empty?
-    @content == " "
+    @content == EMPTY_VALUE
   end
 
   def empty!
-    @content = " "
+    @content = EMPTY_VALUE
   end
 
   def to_s

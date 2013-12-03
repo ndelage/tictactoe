@@ -19,7 +19,7 @@ class Board < Array
   end
 
   def full?
-    flatten.none? { |cell| cell.empty? }
+    flatten.none?(&:empty?)
   end
 
   def diagonals
