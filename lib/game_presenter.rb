@@ -14,12 +14,9 @@ PRINT_BOARD = <<-STRING.chomp
 
                              
 STRING
+
 class GamePresenter
   attr_reader :game
-
-  def initialize(game)
-    @game = game
-  end
 
   def print_board
     system('clear')
@@ -30,19 +27,50 @@ class GamePresenter
     puts print_board
   end
 
+  def present_winner
+    puts "#{game.winner.mark} has Won!" if game.winner
+    puts "It is a tie" if !game.winner
+  end
 
-  def mainloop
+  def get_player(mark)
+    input = gets.chomp.to_i
+    if input == 1
+      player = ConsolePlayer.new(mark)
+    elsif input == 2
+      print "Select difficulty(1-easy, 2-impossible): "
+      input = gets.chomp.to_i
+      if input == 1
+        player = ComputerPlayer.new(4, mark)
+      elsif input == 2
+        player = ComputerPlayer.new(12, mark)
+      else
+        print "Invalid input, try again: "
+        get_player(mark)
+      end
+    else
+      print "Invalid input, try again: "
+      get_player(mark)
+    end
+    player
+  end
+
+  def get_options
+    print "Choose the first player(1-human, 2-computer): "
+    player1 = get_player("X".blue)
+    print "Choose the second player(1-human, 2-computer): "
+    player2 = get_player("O".red)
+    @game = GameInteractor.new(player1: player1,
+                               player2: player2)
+  end
+
+  def start
+    get_options
     until game.over?
       print_board
       move = game.turn.get_move(game)
       game.make_move(move.row, move.column)
     end
-    p game.winner
+    present_winner
   end
 end
-
-player = ConsolePlayer.new("X".blue.bold)
-computer = ComputerPlayer.new(6, "O".red.bold)
-game = GamePresenter.new(GameInteractor.new(player1: player,
-                                            player2: computer))
-game.mainloop
+GamePresenter.new.start
