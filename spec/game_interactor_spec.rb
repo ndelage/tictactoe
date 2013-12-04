@@ -12,9 +12,8 @@ describe GameInteractor do
 
   describe '#make_move' do
     it 'marks the correct cell' do
+      game.board[1][1].should_receive(:mark).with("X")
       game.make_move(1, 1)
-
-      game.board[1][1].content.should eq "X"
     end
 
     it 'switches the turn' do
