@@ -1,7 +1,7 @@
 class Cell
   attr_reader :content
   EMPTY_VALUE = " "
-  
+
   def initialize(content=EMPTY_VALUE)
     @content = content
   end

@@ -1,7 +1,10 @@
 Indices = Struct.new(:row, :column)
 
+# see: http://words.steveklabnik.com/beware-subclassing-ruby-core-classes
 class Board < Array
-  
+
+  # this is a bit much for method params. Can you default to nil
+  # and set the value inside the method?
   def initialize(ary=Array.new(3){Array.new(3){Cell.new}})
     super(ary)
   end
@@ -21,6 +24,8 @@ class Board < Array
   end
 
   def diagonals
+    # this kinda hurts my brain. any good reason
+    # not to hardcode the diagonals?
     (0..2).map do |n|
       [ self[n][n], self[n][-(n+1)] ]
     end

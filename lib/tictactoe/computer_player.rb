@@ -1,5 +1,6 @@
 class ComputerPlayer < AbstractPlayer
   def initialize(depth, mark)
+    # depth....Sweeeeeeeeeet
     @depth = depth
     super(mark)
   end
@@ -12,13 +13,14 @@ class ComputerPlayer < AbstractPlayer
   private
 
   def rank_moves(game)
-  moves = {}
+    moves = {}
     try_each_valid_move(game) do |game, index|
       moves[index] = -negamax(game, -1)
     end
     moves
   end
 
+  # what's color for? (just curious)
   def negamax(game, color, depth=@depth)
     return color * get_score(game) if game.over? || depth == 0
     best_score = -Float::INFINITY
@@ -30,6 +32,7 @@ class ComputerPlayer < AbstractPlayer
 
   def get_score(game)
     return 1 if game.winner == self
+    # why can't you just check if game.winner != self ?
     return -1 if game.winner == (game.players - [self]).first
     return 0
   end
@@ -44,6 +47,7 @@ class ComputerPlayer < AbstractPlayer
 
   def take_random_from_good_moves(moves)
     max_value = moves.values.max
+    # why only those whose value is equal to the max?
     moves.select{|k,v| v == max_value}.keys.sample
   end
 end
