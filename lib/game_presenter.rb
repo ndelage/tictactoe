@@ -10,6 +10,9 @@ PRINT_BOARD = <<-STRING.chomp
                              * | * | * 
                             ---|---|---
                              * | * | * 
+
+
+                             
 STRING
 class GamePresenter
   attr_reader :game
