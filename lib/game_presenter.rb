@@ -1,7 +1,3 @@
-require_relative 'console_player'
-require_relative 'game/game_interactor'
-require 'colored'
-
 PRINT_BOARD = <<-STRING.chomp
 
                              * | * | * 
@@ -15,7 +11,7 @@ PRINT_BOARD = <<-STRING.chomp
 STRING
 
 class GamePresenter
-  attr_reader :game
+  attr_accessor :game
 
   def print_board
     system('clear')
@@ -72,6 +68,7 @@ class GamePresenter
   end
 
   def start
+    system 'clear'
     get_options
     until game.over?
       print_board

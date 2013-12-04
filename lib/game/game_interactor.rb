@@ -1,7 +1,3 @@
-require_relative 'board'
-require_relative 'abstract_player'
-require_relative 'computer_player'
-
 class GameInteractor
   attr_reader :player1, :player2, :winner, :players
   attr_accessor :board

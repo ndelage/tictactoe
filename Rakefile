@@ -1,3 +1,3 @@
 task :play do
-  ruby "lib/tictactoe.rb"
+  ruby "-r './lib/tictactoe.rb' -e 'GamePresenter.new.start'"
 end

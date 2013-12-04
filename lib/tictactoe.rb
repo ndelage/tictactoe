@@ -1,2 +1,8 @@
+require 'colored'
+require_relative 'game/cell'
+require_relative 'game/board'
+require_relative 'game/abstract_player'
+require_relative 'game/computer_player'
+require_relative 'game/game_interactor'
+require_relative 'console_player'
 require_relative 'game_presenter'
-GamePresenter.new.start

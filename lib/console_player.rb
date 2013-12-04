@@ -1,4 +1,3 @@
-require_relative 'game/abstract_player'
 class ConsolePlayer < AbstractPlayer
   def get_move(*)
    print "Enter index(x,y): "

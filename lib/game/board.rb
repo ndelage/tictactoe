@@ -1,5 +1,3 @@
-require_relative 'cell'
-
 Indices = Struct.new(:row, :column)
 
 class Board < Array
