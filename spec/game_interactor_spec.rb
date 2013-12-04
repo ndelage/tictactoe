@@ -1,9 +1,13 @@
 require 'spec_helper'
 describe GameInteractor do
-  let(:player1) { AbstractPlayer.new("X") }
-  let(:player2) { AbstractPlayer.new("O") }
+  let(:player1) { double() }
+  let(:player2) { double() }
   subject(:game) { GameInteractor.new(player1: player1, 
                                       player2: player2) }
+  before do
+    player1.stub(mark: "X")
+    player2.stub(mark: "O")
+  end
 
 
   describe '#make_move' do
