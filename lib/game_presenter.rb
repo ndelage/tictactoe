@@ -67,6 +67,7 @@ class GamePresenter
     get_options
     until game.over?
       print_board
+      puts "#{game.turn.mark} turn"
       move = game.turn.get_move(game)
       game.make_move(move.row, move.column)
     end
