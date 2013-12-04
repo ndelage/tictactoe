@@ -4,7 +4,6 @@ require 'colored'
 
 PRINT_BOARD = <<-STRING.chomp
 
-
                              * | * | * 
                             ---|---|---
                              * | * | * 
@@ -24,6 +23,8 @@ class GamePresenter
     game.board.flatten.each do |cell|
       print_board.sub!("*", cell.content)
     end
+    puts "\n\n"
+    puts "                              #{game.turn.mark} turn"
     puts print_board
   end
 
@@ -54,6 +55,13 @@ class GamePresenter
     player
   end
 
+  def prompt_play_again
+    print "Do you want to play again?(y, n): "
+    input = gets.chomp
+    start if input == "y"
+    exit if input == "n"
+  end
+
   def get_options
     print "Choose the first player(1-human, 2-computer): "
     player1 = get_player("X".blue)
@@ -67,11 +75,10 @@ class GamePresenter
     get_options
     until game.over?
       print_board
-      puts "#{game.turn.mark} turn"
       move = game.turn.get_move(game)
       game.make_move(move.row, move.column)
     end
     present_winner
+    prompt_play_again
   end
 end
-GamePresenter.new.start
